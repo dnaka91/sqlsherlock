@@ -1,9 +1,5 @@
-use std::env;
-
 use diesel::prelude::*;
 use itertools::Itertools;
-
-use dotenv::dotenv;
 
 use crate::{IssueType, Violation};
 
@@ -14,7 +10,7 @@ mod schema;
 mod v5_7;
 mod v8_0;
 
-pub fn find_violations(db: Option<String>) -> Vec<Violation> {
+pub fn find_violations(db: &str) -> Vec<Violation> {
     let con = establish_connection(db);
     let version = get_version(&con).mysql_version;
 
@@ -34,14 +30,8 @@ pub fn find_violations(db: Option<String>) -> Vec<Violation> {
     ])
 }
 
-fn establish_connection(db: Option<String>) -> MysqlConnection {
-    dotenv().ok();
-
-    let database_url = db
-        .or_else(|| env::var("DATABASE_URL").ok())
-        .expect("DATABASE_URL must be set or a database connection string provided");
-    MysqlConnection::establish(&database_url)
-        .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
+fn establish_connection(db: &str) -> MysqlConnection {
+    MysqlConnection::establish(db).unwrap_or_else(|_| panic!("Error connecting to {}", db))
 }
 
 fn get_version(con: &MysqlConnection) -> Version {

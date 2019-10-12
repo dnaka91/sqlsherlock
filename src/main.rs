@@ -1,10 +1,9 @@
 use crossterm::{style, Colorize, Styler};
 
-use sqlsherlock::mysql;
 use sqlsherlock::IssueType;
 
 fn main() {
-    let violations = mysql::find_violations(None);
+    let violations = sqlsherlock::find_violations(None);
 
     println!("\nRESERVED WORDS:");
     for v in violations
