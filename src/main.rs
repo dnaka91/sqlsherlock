@@ -1,29 +1,36 @@
+use std::process;
+
 use crossterm::{style, Colorize, Styler};
 
-use sqlsherlock::IssueType;
+use sqlsherlock::{IssueType, Violation};
 
 fn main() {
     let violations = sqlsherlock::find_violations(None);
+    let (reserved, keywords): (Vec<Violation>, Vec<Violation>) = violations
+        .into_iter()
+        .partition(|v| v.issue_type == IssueType::Reserved);
 
-    println!("\nRESERVED WORDS:");
-    for v in violations
-        .iter()
-        .filter(|v| v.issue_type == IssueType::Reserved)
-    {
-        println!("{}", style(&v.table).yellow().bold());
-        for col in &v.columns {
-            println!("  {}", style(col).yellow());
+    if !reserved.is_empty() {
+        println!("\nRESERVED WORDS:");
+        for v in &reserved {
+            println!("{}", style(&v.table).yellow().bold());
+            for col in &v.columns {
+                println!("  {}", style(col).yellow());
+            }
         }
     }
 
-    println!("\nKEYWORDS:");
-    for v in violations
-        .iter()
-        .filter(|v| v.issue_type == IssueType::Keyword)
-    {
-        println!("{}", style(&v.table).blue().bold());
-        for col in &v.columns {
-            println!("  {}", style(col).blue());
+    if !keywords.is_empty() {
+        println!("\nKEYWORDS:");
+        for v in &keywords {
+            println!("{}", style(&v.table).blue().bold());
+            for col in &v.columns {
+                println!("  {}", style(col).blue());
+            }
         }
+    }
+
+    if !reserved.is_empty() || !keywords.is_empty() {
+        process::exit(1);
     }
 }
