@@ -7,12 +7,12 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-crossterm = "0.11.1"
-diesel = "1.4.2"
-dotenv = "0.14.1"
-failure = "0.1.5"
-itertools = "0.8.0"
-structopt = "0.3.2"
+crossterm = "0.13.2"
+diesel = "1.4.3"
+dotenv = "0.15.0"
+failure = "0.1.6"
+itertools = "0.8.1"
+structopt = "0.3.3"
 
 [features]
 default = ["mysql", "postgres", "sqlite"]

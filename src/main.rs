@@ -1,6 +1,6 @@
 use std::process;
 
-use crossterm::{style, Colorize, Styler};
+use crossterm::style::{style, Colorize, Styler};
 
 use sqlsherlock::{IssueType, Violation};
 
