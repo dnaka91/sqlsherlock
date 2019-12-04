@@ -5,8 +5,11 @@ use crate::{IssueType, Violation};
 
 use self::models::{ColumnInfo, Version};
 
+#[cfg(all(test, feature = "gen"))]
+mod gen;
 mod models;
 mod schema;
+mod v5_6;
 mod v5_7;
 mod v8_0;
 
@@ -14,7 +17,9 @@ pub fn find_violations(db: &str) -> Vec<Violation> {
     let con = establish_connection(db);
     let version = get_version(&con).mysql_version;
 
-    let (reserved, keywords) = if version.starts_with("5.7.") {
+    let (reserved, keywords) = if version.starts_with("5.6.") {
+        (v5_6::RESERVED_WORDS, v5_6::KEYWORDS)
+    } else if version.starts_with("5.7.") {
         (v5_7::RESERVED_WORDS, v5_7::KEYWORDS)
     } else if version.starts_with("8.0.") {
         (v8_0::RESERVED_WORDS, v8_0::KEYWORDS)

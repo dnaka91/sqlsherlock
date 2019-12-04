@@ -5,6 +5,8 @@ use crate::{IssueType, Violation};
 
 use self::models::{ColumnInfo, TableInfo};
 
+#[cfg(all(test, feature = "gen"))]
+mod gen;
 mod models;
 mod schema;
 mod words;

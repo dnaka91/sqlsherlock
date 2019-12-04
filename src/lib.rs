@@ -7,6 +7,8 @@ use dotenv::dotenv;
 
 #[cfg(feature = "mysql")]
 pub mod mysql;
+#[cfg(feature = "postgres")]
+pub mod postgres;
 #[cfg(feature = "sqlite")]
 pub mod sqlite;
 
@@ -33,7 +35,7 @@ pub fn find_violations(db: Option<String>) -> Vec<Violation> {
     if let Some(prefix) = database_url.find(':') {
         return match &database_url[..prefix] {
             "mysql" => mysql::find_violations(&database_url),
-            "postgres" => unimplemented!(),
+            "postgres" => postgres::find_violations(&database_url),
             _ => panic!("Unsupported database"),
         };
     }

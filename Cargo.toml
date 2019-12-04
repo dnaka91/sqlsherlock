@@ -7,15 +7,22 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-crossterm = "0.13.2"
+crossterm = "0.13.3"
 diesel = "1.4.3"
 dotenv = "0.15.0"
 failure = "0.1.6"
-itertools = "0.8.1"
-structopt = "0.3.3"
+itertools = "0.8.2"
+structopt = "0.3.5"
+anyhow = "1.0.25"
+
+isahc = { version = "0.8.1", optional = true, default-features = false }
+kuchiki = { version = "0.7.3", optional = true }
+quote = { version = "1.0.2", optional = true }
+rayon = { version = "1.2.1", optional = true }
 
 [features]
 default = ["mysql", "postgres", "sqlite"]
+gen = ["isahc", "kuchiki", "quote", "rayon"]
 mysql = ["diesel/mysql"]
 postgres = ["diesel/postgres"]
 sqlite = ["diesel/sqlite"]
@@ -23,3 +30,4 @@ sqlite = ["diesel/sqlite"]
 [profile.release]
 lto = true
 panic = "abort"
+
