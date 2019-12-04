@@ -1,3 +1,4 @@
+use anyhow::{Context, Result};
 use diesel::prelude::*;
 use itertools::Itertools;
 
@@ -11,11 +12,11 @@ mod models;
 mod schema;
 mod words;
 
-pub fn find_violations(db: &str) -> Vec<Violation> {
-    let con = establish_connection(db);
-    let tables = get_tables(&con);
+pub fn find_violations(db: &str) -> Result<Vec<Violation>> {
+    let con = establish_connection(db)?;
+    let tables = get_tables(&con)?;
 
-    tables
+    Ok(tables
         .iter()
         .filter_map(|t| {
             let columns = get_columns(&con, &t.name);
@@ -26,20 +27,20 @@ pub fn find_violations(db: &str) -> Vec<Violation> {
                 IssueType::Reserved,
             )
         })
-        .collect()
+        .collect_vec())
 }
 
-fn establish_connection(db: &str) -> SqliteConnection {
-    SqliteConnection::establish(db).unwrap_or_else(|_| panic!("Error connecting to {}", db))
+fn establish_connection(db: &str) -> Result<SqliteConnection> {
+    SqliteConnection::establish(db).with_context(|| format!("Error connecting to {}", db))
 }
 
-fn get_tables(con: &SqliteConnection) -> Vec<TableInfo> {
+fn get_tables(con: &SqliteConnection) -> Result<Vec<TableInfo>> {
     use self::schema::sqlite_master::dsl::*;
 
     sqlite_master
         .filter(type_.eq("table").and(name.not_like("sqlite_%")))
         .load(con)
-        .expect("Error loading tables")
+        .context("Error loading tables")
 }
 
 fn get_columns(con: &SqliteConnection, table: &str) -> Vec<ColumnInfo> {

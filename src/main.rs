@@ -1,11 +1,12 @@
 use std::process;
 
+use anyhow::Result;
 use crossterm::style::{style, Colorize, Styler};
 
 use sqlsherlock::{IssueType, Violation};
 
-fn main() {
-    let violations = sqlsherlock::find_violations(None);
+fn main() -> Result<()> {
+    let violations = sqlsherlock::find_violations(None)?;
     let (reserved, keywords): (Vec<Violation>, Vec<Violation>) = violations
         .into_iter()
         .partition(|v| v.issue_type == IssueType::Reserved);
@@ -33,4 +34,6 @@ fn main() {
     if !reserved.is_empty() || !keywords.is_empty() {
         process::exit(1);
     }
+
+    Ok(())
 }
