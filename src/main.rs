@@ -4,10 +4,10 @@
 
 use std::process;
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 use crossterm::style::{style, Colorize, Styler};
-use structopt::clap::AppSettings;
-use structopt::StructOpt;
+use serde::Serialize;
+use structopt::{clap::AppSettings, StructOpt};
 
 use sqlsherlock::{IssueType, Violation};
 
@@ -18,19 +18,47 @@ struct Opt {
     /// Include keywords (non-reserved) into the scan
     #[structopt(short, long)]
     keywords: bool,
+    /// Print the findings as JSON
+    #[structopt(short, long)]
+    json: bool,
+}
+
+#[derive(Debug, Serialize)]
+struct JsonOutput<'a> {
+    reserved: &'a [Violation],
+    keywords: &'a [Violation],
 }
 
 fn main() -> Result<()> {
     let opt: Opt = Opt::from_args();
 
-    let violations = sqlsherlock::find_violations(None)?;
+    let violations = sqlsherlock::find_violations(None).context("Failed finding violations")?;
     let (reserved, keywords): (Vec<Violation>, Vec<Violation>) = violations
         .into_iter()
         .partition(|v| v.issue_type == IssueType::Reserved);
 
+    if opt.json {
+        print_json(&reserved, &keywords)?;
+    } else {
+        print_text(&opt, &reserved, &keywords);
+    }
+
+    if !reserved.is_empty() || opt.keywords && !keywords.is_empty() {
+        process::exit(1);
+    }
+
+    Ok(())
+}
+
+fn print_json(reserved: &[Violation], keywords: &[Violation]) -> Result<()> {
+    serde_json::to_writer(std::io::stdout(), &JsonOutput { reserved, keywords })
+        .context("Failed writing JSON to stdout")
+}
+
+fn print_text(opt: &Opt, reserved: &[Violation], keywords: &[Violation]) {
     if !reserved.is_empty() {
         println!("\nRESERVED WORDS:");
-        for v in &reserved {
+        for v in reserved {
             println!("{}", style(&v.table).yellow().bold());
             for col in &v.columns {
                 println!("  {}", style(col).yellow());
@@ -40,17 +68,11 @@ fn main() -> Result<()> {
 
     if opt.keywords && !keywords.is_empty() {
         println!("\nKEYWORDS:");
-        for v in &keywords {
+        for v in keywords {
             println!("{}", style(&v.table).blue().bold());
             for col in &v.columns {
                 println!("  {}", style(col).blue());
             }
         }
     }
-
-    if !reserved.is_empty() || opt.keywords && !keywords.is_empty() {
-        process::exit(1);
-    }
-
-    Ok(())
 }

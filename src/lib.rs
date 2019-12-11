@@ -9,6 +9,7 @@ use std::env;
 
 use anyhow::{bail, Context, Result};
 use dotenv::dotenv;
+use serde::Serialize;
 
 #[cfg(feature = "mysql")]
 pub mod mysql;
@@ -23,8 +24,9 @@ pub enum IssueType {
     Keyword,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Violation {
+    #[serde(skip)]
     pub issue_type: IssueType,
     pub table: String,
     pub columns: Vec<String>,
