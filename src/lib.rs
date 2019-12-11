@@ -1,3 +1,7 @@
+#![forbid(unsafe_code)]
+#![deny(clippy::all)]
+#![warn(clippy::nursery)]
+
 #[macro_use]
 extern crate diesel;
 

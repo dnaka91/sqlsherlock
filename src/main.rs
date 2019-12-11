@@ -1,3 +1,7 @@
+#![forbid(unsafe_code)]
+#![deny(clippy::all, clippy::pedantic)]
+#![warn(clippy::nursery)]
+
 use std::process;
 
 use anyhow::Result;

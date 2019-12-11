@@ -31,7 +31,7 @@ impl FromStr for Entry {
             parts[0]
         };
 
-        Ok(Entry {
+        Ok(Self {
             keyword: keyword.split(' ').next().unwrap().to_owned(),
             reserved: keyword.ends_with("(R)"),
         })
