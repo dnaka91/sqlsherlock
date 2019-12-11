@@ -2,10 +2,23 @@ use std::process;
 
 use anyhow::Result;
 use crossterm::style::{style, Colorize, Styler};
+use structopt::clap::AppSettings;
+use structopt::StructOpt;
 
 use sqlsherlock::{IssueType, Violation};
 
+/// Check your SQL database for reserved words and optionally keywords.
+#[derive(Debug, StructOpt)]
+#[structopt(setting = AppSettings::ColoredHelp)]
+struct Opt {
+    /// Include keywords (non-reserved) into the scan
+    #[structopt(short, long)]
+    keywords: bool,
+}
+
 fn main() -> Result<()> {
+    let opt: Opt = Opt::from_args();
+
     let violations = sqlsherlock::find_violations(None)?;
     let (reserved, keywords): (Vec<Violation>, Vec<Violation>) = violations
         .into_iter()
@@ -21,7 +34,7 @@ fn main() -> Result<()> {
         }
     }
 
-    if !keywords.is_empty() {
+    if opt.keywords && !keywords.is_empty() {
         println!("\nKEYWORDS:");
         for v in &keywords {
             println!("{}", style(&v.table).blue().bold());
@@ -31,7 +44,7 @@ fn main() -> Result<()> {
         }
     }
 
-    if !reserved.is_empty() || !keywords.is_empty() {
+    if !reserved.is_empty() || opt.keywords && !keywords.is_empty() {
         process::exit(1);
     }
 
