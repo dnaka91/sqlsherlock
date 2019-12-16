@@ -1,0 +1,11 @@
+[licenses]
+unlicensed = "deny"
+copyleft = "deny"
+allow-osi-fsf-free = "both"
+allow = [
+    "BSD-2-Clause",
+    "MPL-2.0"
+]
+
+[bans]
+multiple-versions = "warn"
