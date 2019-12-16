@@ -9,7 +9,7 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 anyhow = "1.0.25"
-crossterm = "0.13.3"
+crossterm = "0.14.0"
 diesel = "1.4.3"
 dotenv = "0.15.0"
 itertools = "0.8.2"
