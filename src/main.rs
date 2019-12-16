@@ -21,6 +21,9 @@ struct Opt {
     /// Print the findings as JSON
     #[structopt(short, long)]
     json: bool,
+
+    /// Connection string of the database
+    db: Option<String>,
 }
 
 #[derive(Debug, Serialize)]
@@ -32,7 +35,8 @@ struct JsonOutput<'a> {
 fn main() -> Result<()> {
     let opt: Opt = Opt::from_args();
 
-    let violations = sqlsherlock::find_violations(None).context("Failed finding violations")?;
+    let violations =
+        sqlsherlock::find_violations(opt.db.as_ref()).context("Failed finding violations")?;
     let (reserved, keywords): (Vec<Violation>, Vec<Violation>) = violations
         .into_iter()
         .partition(|v| v.issue_type == IssueType::Reserved);

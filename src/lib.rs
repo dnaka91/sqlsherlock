@@ -32,10 +32,11 @@ pub struct Violation {
     pub columns: Vec<String>,
 }
 
-pub fn find_violations(db: Option<String>) -> Result<Vec<Violation>> {
+pub fn find_violations(db: Option<&String>) -> Result<Vec<Violation>> {
     dotenv().ok();
 
     let database_url = db
+        .cloned()
         .or_else(|| env::var("DATABASE_URL").ok())
         .context("DATABASE_URL must be set or a database connection string provided")?;
 
