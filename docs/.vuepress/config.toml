@@ -1,0 +1,23 @@
+title = "SQL Sherlock"
+
+[themeConfig]
+repo = "dnaka91/sqlsherlock"
+docsDir = "docs"
+
+[[themeConfig.nav]]
+text = "Guide"
+link = "/guide/"
+
+[[themeConfig.nav]]
+text = "Configuration"
+link = "/configuration/"
+
+[[themeConfig.sidebar."/guide/"]]
+title = "Guide"
+collapsable = false
+children = ["", "installation", "features"]
+
+[[themeConfig.sidebar."/configuration/"]]
+title = "Configuration"
+collapsable = false
+children = ["", "cli-args"]

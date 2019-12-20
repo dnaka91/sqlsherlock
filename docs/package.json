@@ -1,0 +1,13 @@
+{
+  "name": "sqlsherlock",
+  "version": "1.0.0",
+  "main": "README.md",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vuepress dev",
+    "build": "vuepress build"
+  },
+  "devDependencies": {
+    "vuepress": "^1.2.0"
+  }
+}
