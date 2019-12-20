@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
+      - name: Install software
+        run: sudo apt-get install libmysqlclient-dev libpq-dev libsqlite3-dev
       - name: Setup Rust
         uses: actions-rs/toolchain@v1
         with:
