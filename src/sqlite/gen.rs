@@ -18,7 +18,7 @@ fn generate() -> Result<()> {
     };
 
     let file_name = "src/sqlite/words.rs";
-    std::fs::write(file_name, format!("{}", tokens))?;
+    std::fs::write(file_name, tokens.to_string())?;
     Command::new("rustfmt").arg(file_name).output()?;
 
     Ok(())

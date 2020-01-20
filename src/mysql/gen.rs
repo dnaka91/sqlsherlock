@@ -88,7 +88,7 @@ fn generate() -> Result<()> {
                 "src/mysql/v{}.rs",
                 format!("{:.1}", version).replace(".", "_")
             );
-            std::fs::write(&file_name, format!("{}", tokens))?;
+            std::fs::write(&file_name, tokens.to_string())?;
             Command::new("rustfmt").arg(&file_name).output()?;
             Ok(())
         })
