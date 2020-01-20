@@ -1,12 +1,11 @@
 use std::process::Command;
 
 use anyhow::Result;
-use isahc::ResponseExt;
 use kuchiki::traits::TendrilSink;
 
 #[test]
 fn generate() -> Result<()> {
-    let response = isahc::get("https://www.sqlite.org/lang_keywords.html")?.text()?;
+    let response = ureq::get("https://www.sqlite.org/lang_keywords.html").call().into_string()?;
     let document = kuchiki::parse_html().one(response);
     let mut words = vec![];
 

@@ -1,9 +1,7 @@
 use std::process::Command;
 use std::str::FromStr;
 
-use anyhow::ensure;
-use anyhow::Result;
-use isahc::ResponseExt;
+use anyhow::{ensure,Result};
 use itertools::{Either, Itertools};
 use kuchiki::traits::TendrilSink;
 use rayon::prelude::*;
@@ -49,7 +47,7 @@ fn generate() -> Result<()> {
                 "https://dev.mysql.com/doc/refman/{:.1}/en/keywords.html",
                 version
             );
-            let response = isahc::get(&url)?.text()?;
+            let response = ureq::get(&url).call().into_string()?;
             let document = kuchiki::parse_html().one(response);
             let mut entries: Vec<Entry> = vec![];
 

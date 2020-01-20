@@ -2,7 +2,6 @@ use std::process::Command;
 use std::str::FromStr;
 
 use anyhow::Result;
-use isahc::ResponseExt;
 use itertools::{Either, Itertools};
 use kuchiki::iter::{Descendants, Elements, Select};
 use kuchiki::traits::TendrilSink;
@@ -46,7 +45,7 @@ fn generate() -> Result<()> {
                 "https://www.postgresql.org/docs/{}/sql-keywords-appendix.html",
                 version
             );
-            let response = isahc::get(&url)?.text()?;
+            let response = ureq::get(&url).call().into_string()?;
             let document = kuchiki::parse_html().one(response);
             let mut entries = vec![];
 
