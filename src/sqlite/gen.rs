@@ -5,7 +5,9 @@ use kuchiki::traits::TendrilSink;
 
 #[test]
 fn generate() -> Result<()> {
-    let response = ureq::get("https://www.sqlite.org/lang_keywords.html").call().into_string()?;
+    let response = ureq::get("https://www.sqlite.org/lang_keywords.html")
+        .call()
+        .into_string()?;
     let document = kuchiki::parse_html().one(response);
     let mut words = vec![];
 

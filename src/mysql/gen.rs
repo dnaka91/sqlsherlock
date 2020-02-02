@@ -1,7 +1,7 @@
 use std::process::Command;
 use std::str::FromStr;
 
-use anyhow::{ensure,Result};
+use anyhow::{ensure, Result};
 use itertools::{Either, Itertools};
 use kuchiki::traits::TendrilSink;
 use rayon::prelude::*;
