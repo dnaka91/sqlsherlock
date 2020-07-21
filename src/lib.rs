@@ -7,7 +7,7 @@ extern crate diesel;
 
 use std::env;
 
-use anyhow::{bail, Context, Result};
+use anyhow::{bail, ensure, Context, Result};
 use dotenv::dotenv;
 use serde::Serialize;
 
@@ -47,6 +47,9 @@ pub fn find_violations(db: Option<&String>) -> Result<Vec<Violation>> {
             _ => bail!("Unsupported database"),
         });
     }
+
+    let metadata = std::fs::metadata(&database_url)?;
+    ensure!(metadata.is_file(), "given path is not a file");
 
     sqlite::find_violations(&database_url)
 }

@@ -11,7 +11,7 @@ fn generate() -> Result<()> {
     let document = kuchiki::parse_html().one(response);
     let mut words = vec![];
 
-    for li in document.select("body > ol > li").unwrap() {
+    for li in document.select("div.columns > ul > li").unwrap() {
         words.push(li.text_contents().trim().to_owned());
     }
 
