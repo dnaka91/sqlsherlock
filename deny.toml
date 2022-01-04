@@ -1,11 +1,22 @@
 [licenses]
-unlicensed = "deny"
-copyleft = "deny"
-allow-osi-fsf-free = "both"
 allow = [
-    "BSD-2-Clause",
-    "MPL-2.0"
+    "MPL-2.0",
+    "OpenSSL",
+]
+allow-osi-fsf-free = "both"
+
+[[licenses.clarify]]
+name = "ring"
+version = "*"
+expression = "MIT AND ISC AND OpenSSL"
+license-files = [
+    { path = "LICENSE", hash = 0xbd0eed23 },
 ]
 
 [bans]
-multiple-versions = "warn"
+skip = [
+    { name = "idna", version = "=0.1.5" },
+    { name = "itoa", version = "=0.4.8" },
+    { name = "percent-encoding", version = "=1.0.1" },
+    { name = "url", version = "=1.7.2" },
+]

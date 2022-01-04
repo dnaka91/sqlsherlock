@@ -47,7 +47,7 @@ fn generate() -> Result<()> {
                 "https://dev.mysql.com/doc/refman/{:.1}/en/keywords.html",
                 version
             );
-            let response = ureq::get(&url).call().into_string()?;
+            let response = ureq::get(&url).call()?.into_string()?;
             let document = kuchiki::parse_html().one(response);
             let mut entries: Vec<Entry> = vec![];
 

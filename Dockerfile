@@ -1,20 +1,27 @@
-# syntax = docker/dockerfile:experimental
-FROM clux/muslrust:stable as builder
+FROM rust:1.57-alpine as builder
 
-RUN apt-get update \
-&& apt-get install -y libmysqlclient-dev \
-&& rm -rf /var/lib/apt/lists/*
+WORKDIR /volume
+
+RUN apk add --no-cache \
+    build-base=~0.5 \
+    mariadb-dev=~10.5 \
+    musl-dev=~1.2 \
+    postgresql-dev=~13.5 \
+    sqlite-dev=~3.35
 
 COPY src/ src/
 COPY Cargo.lock Cargo.toml ./
 
-RUN --mount=type=cache,target=/root/.cargo/git \
-    --mount=type=cache,target=/root/.cargo/registry \
-    --mount=type=cache,target=/volume/target \
-    cargo install --path .
+RUN cargo build --release && \
+    strip --strip-all target/release/sqlsherlock
 
-FROM alpine:3.11
+FROM alpine:3.15
 
-COPY --from=builder /root/.cargo/bin/sqlsherlock /app/
+RUN addgroup -g 1000 sqlsherlock && \
+    adduser -u 1000 -G sqlsherlock -D -g '' -H -h /dev/null -s /sbin/nologin marmalade
+
+COPY --from=builder /volume/target/release/sqlsherlock /bin/
+
+USER sqlsherlock
 
 ENTRYPOINT ["/app/sqlsherlock"]

@@ -5,21 +5,21 @@
 use std::process;
 
 use anyhow::{Context, Result};
-use crossterm::style::{style, Colorize, Styler};
+use clap::Parser;
+use crossterm::style::{style, Stylize};
 use serde::Serialize;
-use structopt::{clap::AppSettings, StructOpt};
 
 use sqlsherlock::{IssueType, Violation};
 
 /// Check your SQL database for reserved words and optionally keywords.
-#[derive(Debug, StructOpt)]
-#[structopt(setting = AppSettings::ColoredHelp)]
+#[derive(Debug, Parser)]
+#[clap(about, author, version)]
 struct Opt {
     /// Include keywords (non-reserved) into the scan
-    #[structopt(short, long)]
+    #[clap(short, long)]
     keywords: bool,
     /// Print the findings as JSON
-    #[structopt(short, long)]
+    #[clap(short, long)]
     json: bool,
 
     /// Connection string of the database
@@ -33,7 +33,7 @@ struct JsonOutput<'a> {
 }
 
 fn main() -> Result<()> {
-    let opt: Opt = Opt::from_args();
+    let opt: Opt = Opt::parse();
 
     let violations =
         sqlsherlock::find_violations(opt.db.as_ref()).context("Failed finding violations")?;

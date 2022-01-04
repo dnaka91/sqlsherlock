@@ -45,7 +45,7 @@ fn generate() -> Result<()> {
                 "https://www.postgresql.org/docs/{}/sql-keywords-appendix.html",
                 version
             );
-            let response = ureq::get(&url).call().into_string()?;
+            let response = ureq::get(&url).call()?.into_string()?;
             let document = kuchiki::parse_html().one(response);
             let mut entries = vec![];
 
