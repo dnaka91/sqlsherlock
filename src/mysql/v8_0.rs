@@ -108,6 +108,7 @@ pub const RESERVED_WORDS: &[&str] = &[
     "INT4",
     "INT8",
     "INTEGER",
+    "INTERSECT",
     "INTERVAL",
     "INTO",
     "IO_AFTER_GTIDS",

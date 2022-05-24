@@ -90,7 +90,7 @@ fn generate() -> Result<()> {
                 pub const KEYWORDS: &[&str] = &[#(#keyword),*];
             };
 
-            let file_name = format!("src/postgres/v{}.rs", version.to_string().replace(".", "_"));
+            let file_name = format!("src/postgres/v{}.rs", version.to_string().replace('.', "_"));
             std::fs::write(&file_name, tokens.to_string())?;
             Command::new("rustfmt").arg(&file_name).output()?;
             Ok(())
