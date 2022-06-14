@@ -14,9 +14,7 @@ license-files = [
 ]
 
 [bans]
-skip = [
-    { name = "idna", version = "=0.1.5" },
-    { name = "itoa", version = "=0.4.8" },
-    { name = "percent-encoding", version = "=1.0.1" },
-    { name = "url", version = "=1.7.2" },
+skip-tree = [
+    { name = "diesel", depth = 3 },
+    { name = "kuchiki", depth = 8 },
 ]
