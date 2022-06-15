@@ -16,13 +16,12 @@ use sqlsherlock::{IssueType, Violation};
 #[clap(about, author, version)]
 struct Opt {
     /// Include keywords (non-reserved) into the scan
-    #[clap(short, long, action)]
+    #[clap(short, long)]
     keywords: bool,
     /// Print the findings as JSON
-    #[clap(short, long, action)]
+    #[clap(short, long)]
     json: bool,
     /// Connection string of the database
-    #[clap(value_parser)]
     db: Option<String>,
 }
 
