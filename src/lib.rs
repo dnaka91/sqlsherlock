@@ -8,7 +8,7 @@ extern crate diesel;
 use std::env;
 
 use anyhow::{bail, ensure, Context, Result};
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use serde::Serialize;
 
 #[cfg(feature = "mysql")]
